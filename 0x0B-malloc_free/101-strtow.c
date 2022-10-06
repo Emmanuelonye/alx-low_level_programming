@@ -1,75 +1,110 @@
-#include "main.h"
 #include <stdlib.h>
-/**
- * wordCounterRec - count num of words recursively
- * @str: pointer to char
- * @i: current index
- * Return: number of words
- **/
-int wordCounterRec(char *str, int i)
-{
-	if (str[i] == '\0')
-		return (0);
-	if (str[i] == ' ' && str[i + 1] != ' ' && str[i + 1] != '\0')
-		return (1 + wordCounterRec(str, i + 1));
-	return (wordCounterRec(str, i + 1));
-}
-/**
- * word_counter - counts number of words in 1d array of strings
- * @str: pointer to char
- * Return: number of words
- **/
-int word_counter(char *str)
-{
-	if (str[0] != ' ')
-		return (1 + wordCounterRec(str, 0));
-	return (wordCounterRec(str, 0));
-}
-/**
- * strtow - splits a string into words.
- * @str: string to be splitted
- * Return: pointer to an array of strings (words) or null
- **/
-char **strtow(char *str)
-{
-	char **strDup;
-	int i, n, m, words;
 
-	if (str == NULL || str[0] == 0)
-		return (NULL);
-	words = word_counter(str);
-	if (words < 1)
-		return (NULL);
-	strDup = malloc(sizeof(char *) * (words + 1));
-	if (strDup == NULL)
-		return (NULL);
-	i = 0;
-	while (i < words && *str != '\0')
+/**
+ * word_count - Count number of words separated by spaces in a string
+ * @str: String to check
+ *
+ * Return: Number of words;
+ */
+int word_count(char *str)
+{
+	int count;
+	int i;
+
+	i = count = 0;
+	while (str[i] != '\0')
 	{
-		if (*str != ' ')
+		if (str[i] != ' ' && (str[i + 1] == ' ' || str[i + 1] == '\0'))
 		{
-			n = 0;
-			while (str[n] != ' ')
-				n++;
-			strDup[i] = malloc(sizeof(char) * (n + 1));
-			if (strDup[i] == NULL)
-			{
-				while (--i >= 0)
-					free(strDup[--i]);
-				free(strDup);
-				return (NULL);
-			}
-			m = 0;
-			while (m < n)
-			{
-				strDup[i][m] = *str;
-				m++, str++;
-			}
-			strDup[i][m] = '\0';
+			count++;
 			i++;
 		}
-		str++;
+		i++;
 	}
-	strDup[i] = '\0';
-	return (strDup);
+	return (count);
+}
+
+/**
+ * find_words_len - Find length of all the words in a string
+ * @str: String to check length of words in
+ * @words: Number of words
+ *
+ * Return: Combined length of words
+ */
+int *find_words_len(char *str, int words)
+{
+	int i, word, len;
+	int *sizes;
+
+	sizes = malloc(words * sizeof(int));
+	if (sizes == NULL)
+		return (NULL);
+	i = word = 0;
+	while (word < words)
+	{
+		if (str[i] != ' ')
+		{
+			len = 0;
+			while (str[i] != ' ')
+			{
+				len++;
+				i++;
+			}
+			len++;
+			sizes[word] = len;
+			word++;
+		}
+		i++;
+	}
+	return (sizes);
+}
+
+/**
+ * strtow - Split a string into words
+ * @str: String to split
+ *
+ * Return: Return pointer to an array of strings, NULL if it fails
+ */
+char **strtow(char *str)
+{
+	char **nstr;
+	int words, i, j, k, cur_words, *sizes;
+
+	if (str == NULL || *str == '\0')
+		return (NULL);
+	words = word_count(str);
+	sizes = malloc(words * sizeof(int));
+	if (sizes == NULL)
+		return (NULL);
+	sizes = find_words_len(str, words);
+	nstr = malloc((words + 1) * sizeof(char *));
+	if (nstr == NULL)
+		return (NULL);
+	i = j = k = 0;
+	while (i < words && str[j] != '\0')
+	{
+		cur_words = i;
+		nstr[i] = malloc(sizes[i] + sizeof(char));
+		if (nstr[i] == NULL)
+		{
+			for (i = i - 1; i >= 0; i--)
+				free(nstr[i--]);
+			free(nstr);
+			return (NULL);
+		}
+		while (str[j] != '\0' && i == cur_words)
+		{
+			if (str[j] != ' ')
+			{
+				while (str[j] != '\0' && str[j] != ' ')
+				{
+					nstr[i][k] = str[j]; j++; k++;
+				}
+				nstr[i][k] = '\0'; i++; k = 0;
+			}
+			j++;
+		}
+	}
+	nstr[i] = NULL;	free(sizes);
+	return (nstr);
 }

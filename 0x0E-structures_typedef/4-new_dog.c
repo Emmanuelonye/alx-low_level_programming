@@ -1,69 +1,42 @@
 #include "dog.h"
 #include <stdlib.h>
-
 /**
- * *_strcpy - Copy the given string
- * @dest: Location to copy string to
- * @src: String to copy to given location
- *
- * Return: Pointer to dest
- */
-char *_strcpy(char *dest, char *src)
-{
-	int i = 0;
-
-	while (*(src + i) != 0)
-	{
-		*(dest + i) = *(src + i);
-		i++;
-	}
-	*(dest + i) = '\0';
-	return (dest);
-}
-
-/**
- * new_dog - Create a new dog struct
- * @name: Name of dog
- * @age: Age of dog
- * @owner: Owner of dog
- *
- * Return: pointer to struct, NULL if fails
- */
+ * new_dog - creates a new dog.
+ * @name: pointer to a char for name of dog
+ * @age: age of dog
+ * @owner: pointer to a char for owner of dog
+ * Return: pointer to a new dog of type dog_t
+ **/
 dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *new_dog;
-	char *new_name;
-	char *new_owner;
-	int len;
+	int nameLen, ownerLen, i;
+	dog_t *d1;
 
-	new_dog = malloc(sizeof(dog_t));
-	if (new_dog == NULL)
+	d1 = (dog_t *)malloc(sizeof(dog_t));
+	if (d1 == NULL)
 		return (NULL);
-	len = 0;
-	while (name[len] != '\0')
-		len++;
-	len++;
-	new_name = malloc(len * sizeof(*owner));
-	if (new_name == NULL)
+	nameLen = ownerLen = 0;
+	while (name[nameLen++])
+		;
+	while (owner[ownerLen++])
+		;
+	d1->name = malloc(nameLen * sizeof(d1->name));
+	if (d1->name == NULL)
 	{
-		free(new_dog);
+		free(d1);
 		return (NULL);
 	}
-	len = 0;
-	while (name[len] != '\0')
-		len++;
-	len++;
-	new_owner = malloc(len * sizeof(*name));
-	if (new_owner == NULL)
+	for (i = 0; i <= nameLen; i++)
+		d1->name[i] = name[i];
+	d1->age = age;
+	d1->owner = malloc(ownerLen * sizeof(d1->owner));
+	if (d1->owner == NULL)
 	{
-		free(new_name);
-		free(new_dog);
+		free(d1->name);
+		free(d1);
 		return (NULL);
 	}
-	_strcpy(new_name, name);
-	_strcpy(new_owner, owner);
-	new_dog->name = new_name;
-	new_dog->age = age;
-	new_dog->owner = new_owner;
-	return (new_dog);
+	for (i = 0; i <= ownerLen; i++)
+		d1->owner[i] = owner[i];
+	return (d1);
 }

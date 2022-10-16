@@ -6,44 +6,31 @@
  */
 int _atoi(char *s)
 {
-	int res = 0;
- 
+	int i, n, m;
 
-    // Initialize sign as positive
-
-    int sign = 1;
- 
-
-    // Initialize index of first digit
-
-    int i = 0;
- 
-
-    // If number is negative,
-
-    // then update sign
-
-    if (s[0] == '-') {
-
-        sign = -1;
- 
-
-        // Also update index of first digit
-
-        i++;
-
-    }
- 
-
-    // Iterate through all digits
-
-    // and update the result
-
-    for (; s[i] != '\0'; ++i)
-
-        res = res * 10 + s[i] - '0';
- 
-
-    // Return result with sign
-	return sign * res;
+	i = n = m = 0;
+	while (*(s + i) != '\0')
+	{
+		if (*(s + i) == '-')
+			m++;
+		if (*(s + i) >= '0' && *(s + i) <= '9')
+		{
+			while (*(s + i) >= '0' && *(s + i) <= '9')
+			{
+				if (n == 0)
+				{
+					n = (n * 10) + (*(s + i) - '0');
+					n *= -1;
+				}
+				else
+					n = (n * 10) - (*(s + i) - '0');
+				i++;
+			}
+			if (m % 2 == 0)
+				n *= -1;
+			return (n);
+		}
+		i++;
+	}
+	return (0);
 }

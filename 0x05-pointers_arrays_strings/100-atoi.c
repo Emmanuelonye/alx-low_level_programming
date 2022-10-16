@@ -23,7 +23,7 @@ int _atoi(char *s)
 
     // then update sign
 
-    if (str[0] == '-') {
+    if (s[0] == '-') {
 
         sign = -1;
  
@@ -39,9 +39,9 @@ int _atoi(char *s)
 
     // and update the result
 
-    for (; str[i] != '\0'; ++i)
+    for (; s[i] != '\0'; ++i)
 
-        res = res * 10 + str[i] - '0';
+        res = res * 10 + s[i] - '0';
  
 
     // Return result with sign

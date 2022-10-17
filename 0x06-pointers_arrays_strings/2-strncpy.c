@@ -1,40 +1,26 @@
-/**
- * _strncpy - Copy src string to dest, but only the n total of bytes
- * @dest: Where you are copying to
- * @src: The string being copied
- * @n: Number of bytes to copy
+#include "main.h"
+/** _strncpy - copy a string
+ * @dest: input value
+ * @src: input value
+ * @n: input value
  *
- * Return: Pointer to dest
+ * Return: dest
  */
 char *_strncpy(char *dest, char *src, int n)
 {
-	int i, ls;
+	int j;
 
-	i = ls = 0;
-	while (src[ls] != '\0')
+	j = 0;
+	while (j < n && src[j] != '\0')
 	{
-		ls++;
+		dest[j] = src[j];
+		j++;
 	}
-	if (ls < n)
+	while (j < n)
 	{
-		while (i < ls)
-		{
-			dest[i] = src[i];
-			i++;
-		}
-		while (i < n)
-		{
-			dest[i] = '\0';
-			i++;
-		}
+		dest[j] = '\0';
+		j++;
 	}
-	else
-	{
-		while (i < n)
-		{
-			dest[i] = src[i];
-			i++;
-		}
-	}
+
 	return (dest);
 }
